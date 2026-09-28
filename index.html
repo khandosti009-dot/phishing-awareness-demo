@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Awareness Demo - Educational Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .warning-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .email-demo {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .email-header {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #999;
+        }
+
+        .email-from {
+            margin: 8px 0;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .email-subject {
+            margin: 8px 0;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .email-body {
+            line-height: 1.6;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        .red-flag {
+            background: #ffe0e0;
+            border-left: 4px solid #ff6b6b;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #d32f2f;
+            font-weight: 500;
+        }
+
+        .green-flag {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .quiz-section {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .question {
+            margin: 20px 0;
+        }
+
+        .question-text {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .result {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .result.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+
+        .result.incorrect {
+            background: #ffcdd2;
+            color: #d32f2f;
+            border: 2px solid #ff6b6b;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 12px;
+            margin: 10px 0;
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .tips-list li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-card h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .url-analysis {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .url-safe {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .url-suspicious {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="warning-badge">⚠️ EDUCATIONAL TRAINING DEMO</div>
+            <h1>Phishing Awareness Training</h1>
+            <p>Learn to identify and avoid phishing attacks</p>
+        </header>
+
+        <!-- Section 1: What is Phishing -->
+        <section class="section">
+            <h2>🎯 What is Phishing?</h2>
+            <p>Phishing is a cybercrime where attackers impersonate legitimate organizations to trick you into revealing sensitive information like passwords, credit card numbers, or personal data.</p>
+            <p style="margin-top: 15px;"><strong>Goal:</strong> This training helps you recognize phishing attempts and protect yourself.</p>
+        </section>
+
+        <!-- Section 2: Red Flags -->
+        <section class="section">
+            <h2>🚩 Common Red Flags</h2>
+            <ul class="tips-list">
+                <li><strong>Urgent Action Required:</strong> "Your account will be closed in 24 hours!" or "Verify now!"</li>
+                <li><strong>Suspicious URLs:</strong> Links that don't match the official domain (e.g., "paypa1.com" instead of "paypal.com")</li>
+                <li><strong>Generic Greetings:</strong> "Dear Customer" or "Dear User" instead of your real name</li>
+                <li><strong>Requests for Passwords:</strong> Legitimate companies never ask for passwords via email</li>
+                <li><strong>Spelling & Grammar Errors:</strong> Professional companies proofread their emails</li>
+                <li><strong>Suspicious Attachments:</strong> .exe, .zip, or unexpected files</li>
+                <li><strong>Mismatched Sender Email:</strong> Official domain doesn't match sender address</li>
+                <li><strong>Too Good to Be True:</strong> "You've won!" or "Claim your prize!" offers</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Email Examples -->
+        <section class="section">
+            <h2>📧 Example: Suspicious Email #1</h2>
+            
+            <div class="email-demo">
+                <div class="email-header">
+                    <div class="email-from">From: support@paypa1.com</div>
+                    <div class="email-subject">Subject: ⚠️ Urgent: Verify Your Account Immediately</div>
+                </div>
+                <div class="email-body">
+                    Dear User,<br><br>
+                    Your PayPal account has been compromised. Click the link below to verify your account within 24 hours or it will be closed.<br><br>
+                    <a href="#" style="color: blue;">https://paypa1.com/verify-account?token=xyz123</a><br><br>
+                    Best Regards,<br>
+                    PayPal Security Team
+                </div>
+            </div>
+
+            <h3>Red Flags Identified:</h3>
+            <div class="red-flag">🚩 Sender email is "paypa1.com" (with number 1, not letter L) - Domain Spoofing</div>
+            <div class="red-flag">🚩 Urgent action required within 24 hours - Creates panic</div>
+            <div class="red-flag">🚩 Generic greeting "Dear User" - Not personalized</div>
+            <div class="red-flag">🚩 Asks to click link and verify account - Credential theft</div>
+            <div class="red-flag">🚩 Suspicious URL with "token" parameter - Phishing link</div>
+
+            <h3>What You Should Do:</h3>
+            <div class="green-flag">✓ Do NOT click the link</div>
+            <div class="green-flag">✓ Go directly to paypal.com (type in address bar, don't click email link)</div>
+            <div class="green-flag">✓ Report email as phishing to PayPal support</div>
+            <div class="green-flag">✓ Delete the email</div>
+        </section>
+
+        <!-- Section 4: URL Analysis -->
+        <section class="section">
+            <h2>🔗 URL Analysis</h2>
+            
+            <h3>Suspicious URL Example:</h3>
+            <div class="url-analysis url-suspicious">
+                https://paypal-security.verify-account.click/?id=user@email.com&redirect=paypal.com
+            </div>
+            <p style="margin-top: 10px;"><strong>Why it's suspicious:</strong></p>
+            <ul class="tips-list">
+                <li>Domain is "verify-account.click" (not paypal.com)</li>
+                <li>Uses a suspicious TLD ".click"</li>
+                <li>Contains user email as parameter (tracking)</li>
+                <li>Tries to redirect to paypal.com to appear legitimate</li>
+            </ul>
+
+            <h3>Legitimate URL Example:</h3>
+            <div class="url-analysis url-safe">
+                https://www.paypal.com/signin/
+            </div>
+            <p style="margin-top: 10px;"><strong>Why it's safe:</strong></p>
+            <ul class="tips-list">
+                <li>Official paypal.com domain</li>
+                <li>Uses HTTPS (secure connection)</li>
+                <li>No suspicious parameters or redirects</li>
+                <li>Standard path for login</li>
+            </ul>
+        </section>
+
+        <!-- Section 5: Interactive Quiz -->
+        <section class="section">
+            <h2>🧠 Test Your Knowledge</h2>
+            <p style="margin-bottom: 20px;">Answer the following questions to test your phishing awareness.</p>
+
+            <div class="quiz-section">
+                <div class="question">
+                    <div class="question-text">1. You receive an email from "amazon@amaz0n.net" asking you to update your payment method. What should you do?</div>
+                    <div class="options">
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q1" value="a">
+                                Click the link in the email to update immediately
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q1" value="b" data-correct="true">
+                                Go directly to amazon.com in your browser and check your account
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q1" value="c">
+                                Reply to the email with your payment details
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q1" value="d">
+                                Forward to your friends to check if it's real
+                            </label>
+                        </div>
+                    </div>
+                    <div class="result" id="result1"></div>
+                </div>
+            </div>
+
+            <div class="quiz-section">
+                <div class="question">
+                    <div class="question-text">2. A legitimate company email should...</div>
+                    <div class="options">
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q2" value="a">
+                                Always ask for your password to verify your identity
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q2" value="b" data-correct="true">
+                                Address you by your full name and use official domain email
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q2" value="c">
+                                Include urgent language and threats
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q2" value="d">
+                                Have multiple spelling and grammar mistakes
+                            </label>
+                        </div>
+                    </div>
+                    <div class="result" id="result2"></div>
+                </div>
+            </div>
+
+            <div class="quiz-section">
+                <div class="question">
+                    <div class="question-text">3. Which URL looks most suspicious?</div>
+                    <div class="options">
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q3" value="a">
+                                https://www.linkedin.com/signin
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q3" value="b">
+                                https://linked-in.security-check.net/?user=you
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q3" value="c" data-correct="true">
+                                Both b and is clearly suspicious
+                            </label>
+                        </div>
+                        <div class="option">
+                            <label>
+                                <input type="radio" name="q3" value="d">
+                                All of these look legitimate
+                            </label>
+                        </div>
+                    </div>
+                    <div class="result" id="result3"></div>
+                </div>
+            </div>
+
+            <button onclick="submitQuiz()">Submit Quiz & See Score</button>
+            <div id="scoreCard" class="score-card hidden">
+                <h3 id="scoreText">Your Score</h3>
+                <p id="scoreMessage"></p>
+                <button onclick="location.reload()">Retake Quiz</button>
+            </div>
+        </section>
+
+        <!-- Section 6: Best Practices -->
+        <section class="section">
+            <h2>🛡️ Best Practices to Stay Safe</h2>
+            <ul class="tips-list">
+                <li>Never click links in emails - Type the website address directly in your browser</li>
+                <li>Hover over links to see the actual URL before clicking</li>
+                <li>Enable two-factor authentication (2FA) on all important accounts</li>
+                <li>Use a password manager to create unique, strong passwords</li>
+                <li>Keep your software and browser updated</li>
+                <li>Be skeptical of urgency and threats in emails</li>
+                <li>Verify requests by calling the official company phone number</li>
+                <li>Use email filters and spam detection tools</li>
+                <li>Report suspicious emails to your IT department or email provider</li>
+                <li>Educate yourself continuously about new phishing techniques</li>
+            </ul>
+        </section>
+
+        <!-- Section 7: Resources -->
+        <section class="section">
+            <h2>📚 Additional Resources</h2>
+            <ul class="tips-list">
+                <li>Check emails at <strong>abuse.net</strong> to report phishing</li>
+                <li>Verify domain ownership at <strong>whois.com</strong></li>
+                <li>Test your password strength at <strong>haveibeenpwned.com</strong></li>
+                <li>Report phishing to Anti-Phishing Working Group (APWG)</li>
+                <li>Visit <strong>phishing.org</strong> for more information</li>
+                <li>Contact your organization's security/IT department for support</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>🎓 This is an educational training tool. Stay vigilant and stay safe online!</p>
+            <p>Last Updated: 2026 | Always verify before clicking links or entering sensitive information</p>
+        </footer>
+    </div>
+
+    <script>
+        function submitQuiz() {
+            let score = 0;
+            let answered = 0;
+
+            for (let i = 1; i <= 3; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const resultDiv = document.getElementById(`result${i}`);
+
+                if (selected) {
+                    answered++;
+                    if (selected.hasAttribute('data-correct')) {
+                        score++;
+                        resultDiv.textContent = '✓ Correct!';
+                        resultDiv.className = 'result correct';
+                    } else {
+                        resultDiv.textContent = '✗ Incorrect. This email contains phishing red flags.';
+                        resultDiv.className = 'result incorrect';
+                    }
+                    resultDiv.style.display = 'block';
+                } else {
+                    resultDiv.textContent = '⚠️ Please answer this question';
+                    resultDiv.className = 'result incorrect';
+                    resultDiv.style.display = 'block';
+                }
+            }
+
+            if (answered === 3) {
+                const percentage = Math.round((score / 3) * 100);
+                const scoreCard = document.getElementById('scoreCard');
+                const scoreText = document.getElementById('scoreText');
+                const scoreMessage = document.getElementById('scoreMessage');
+
+                scoreText.textContent = `${percentage}%`;
+
+                if (percentage === 100) {
+                    scoreMessage.textContent = '🎉 Excellent! You have strong phishing awareness!';
+                } else if (percentage >= 66) {
+                    scoreMessage.textContent = '👍 Good! You understand most phishing red flags. Review the material above to improve.';
+                } else {
+                    scoreMessage.textContent = '📚 Keep learning! Read the red flags section and try again.';
+                }
+
+                scoreCard.classList.remove('hidden');
+                scoreCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                submitQuiz();
+            }
+        });
+    </script>
+</body>
+</html>
